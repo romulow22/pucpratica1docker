@@ -1,155 +1,131 @@
-Aqui está um exemplo de um arquivo `README.md` para o seu jogo:
+# IEC_DCSE_O3_T1_Online: Conteinerização e Orquestração
 
----
+## Trabalho Prático Unidade 1 : *Docker*
 
-# Jogo de Adivinhação com Flask
-
-Este é um simples jogo de adivinhação desenvolvido utilizando o framework Flask. O jogador deve adivinhar uma senha criada aleatoriamente, e o sistema fornecerá feedback sobre o número de letras corretas e suas respectivas posições.
-
-## Funcionalidades
-
-- Criação de um novo jogo com uma senha fornecida pelo usuário.
-- Adivinhe a senha e receba feedback se as letras estão corretas e/ou em posições corretas.
-- As senhas são armazenadas  utilizando base64.
-- As adivinhações incorretas retornam uma mensagem com dicas.
+- Nome: Rômulo Alves
+- E-mail: 1545593@sga.pucminas.br
+- Matricula: 212457
   
+## Sumário
+- [IEC\_DCSE\_O3\_T1\_Online: Conteinerização e Orquestração](#iec_dcse_o3_t1_online-conteinerização-e-orquestração)
+  - [Trabalho Prático Unidade 1 : *Docker*](#trabalho-prático-unidade-1--docker)
+  - [Sumário](#sumário)
+  - [Descrição](#descrição)
+  - [Arquitetura da Solução](#arquitetura-da-solução)
+  - [Detalhes da Implementação](#detalhes-da-implementação)
+  - [Requisitos](#requisitos)
+  - [Instruções de Instalação e Execução](#instruções-de-instalação-e-execução)
+    - [1. Clonar o repositório](#1-clonar-o-repositório)
+    - [2. Executar o ambiente](#2-executar-o-ambiente)
+  - [Como Jogar](#como-jogar)
+  - [Manutenção e Atualização](#manutenção-e-atualização)
+  - [Escalabilidade](#escalabilidade)
+  - [Remoção do Ambiente](#remoção-do-ambiente)
+  - [Considerações de Segurança](#considerações-de-segurança)
+  - [Contribuição](#contribuição)
+  - [Licença](#licença)
+    
+## Descrição
+
+Este projeto implementa uma versão conteinerizada do jogo de adivinhação disponível no [Guess Game](https://github.com/fams/guess_game), utilizando Docker e Docker Compose. A solução demonstra boas práticas de conteinerização, orquestração e arquitetura de microserviços.
+
+
+## Arquitetura da Solução
+
+A solução é composta por três serviços principais:
+
+1. **backend-app**: Aplicação Python (Flask) que executa a lógica do jogo de adivinhação.
+2. **frontend-app**: Servidor Nginx atuando como proxy reverso, balanceando o backend e servindo as páginas do frontend React.
+3. **postgresdb**: Banco de dados PostgreSQL para persistência de dados.
+
+## Detalhes da Implementação
+
+1. **Dockerfiles Otimizados**: 
+   - Utilização de imagens Alpine para backend e frontend, priorizando eficiência e portabilidade.
+
+2. **Configuração Nginx**:
+   - Tratamento diferenciado de requisições entre frontend e backend.
+   - Implementação de balanceamento de carga para múltiplas instâncias de backend.
+
+3. **Docker Compose**:
+   - Segregação de redes (APP e DB) para isolamento de segurança.
+   - Implementação de healthchecks em todos os serviços.
+   - Definição de dependências para inicialização correta.
+   - Política de restart "unless-stopped" para alta disponibilidade.
+   - Volume local para persistência do banco de dados.
+
 ## Requisitos
 
-- Python 3.8+
-- Flask
-- Um banco de dados local (ou um mecanismo de armazenamento configurado em `current_app.db`)
-- node 18.17.0
+- [Docker](https://docs.docker.com/engine/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
-## Instalação
+> **Nota**: Este ambiente foi testado no Windows 11 com [Docker Desktop](https://docs.docker.com/desktop/)
 
-1. Clone o repositório:
+## Instruções de Instalação e Execução
 
-   ```bash
-   git clone https://github.com/fams/guess_game.git
-   cd guess-game
-   ```
+### 1. Clonar o repositório
 
-2. Crie um ambiente virtual e ative-o:
+```shell
+git clone https://github.com/romulow22/pucpratica1docker.git
+```
 
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # Linux/Mac
-   venv\Scripts\activate  # Windows
-   ```
+### 2. Executar o ambiente
 
-3. Instale as dependências:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Configure o banco de dados com as variáveis de ambiente no arquivo start-backend.sh
-    1. Para sqlite
-
-        ```bash
-            export FLASK_APP="run.py"
-            export FLASK_DB_TYPE="sqlite"            # Use SQLITE
-            export FLASK_DB_PATH="caminho/db.sqlite" # caminho do banco
-        ```
-
-    2. Para Postgres
-
-        ```bash
-            export FLASK_APP="run.py"
-            export FLASK_DB_TYPE="postgres"       # Use postgres
-            export FLASK_DB_USER="postgres"       # Usuário do banco
-            export FLASK_DB_NAME="postgres"       # Nome do Banco
-            export FLASK_DB_PASSWORD="secretpass" # Senha do banco
-            export FLASK_DB_HOST="localhost"      # Hostname
-            export FLASK_DB_PORT="5432"           # Porta
-        ```
-
-    3. Para DynamoDB
-
-        ```bash
-        export FLASK_APP="run.py"
-        export FLASK_DB_TYPE="dynamodb"       # Use postgres
-        export AWS_DEFAULT_REGION="us-east-1" # AWS region
-        export AWS_ACCESS_KEY_ID="FAKEACCESSKEY123456" 
-        export AWS_SECRET_ACCESS_KEY="FakeSecretAccessKey987654321"
-        export AWS_SESSION_TOKEN="FakeSessionTokenABCDEFGHIJKLMNOPQRSTUVXYZ1234567890"
-        ```
-
-5. Execute o backend
-
-   ```bash
-   ./start-backend.sh &
-   ```
-
-## Frontend
-No diretorio de frontend
-
-1. Instale o node com o nvm. Se não tiver o nvm instalado, siga o [tutorial](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating)
-
-    ```bash
-    nvm install 18.17.0
-    nvm use 18.17.0
-    # Habilite o yarn
-    corepack enable
-    ```
-
-2. Instale as dependências do node com o npm:
-
-    ```bash
-    npm install
-    ```
-
-3. Exporte a url onde está executando o backend e execute o backend.
-
-   ```bash
-    export REACT_APP_BACKEND_URL=http://localhost:5000
-    yarn start
-   ```
+```shell
+cd pucpratica1docker
+docker compose -f docker-compose.yml up -d --build
+```  
 
 ## Como Jogar
 
-### 1. Criar um novo jogo
-
-Acesse a url do frontend http://localhost:3000
-
-Digite uma frase secreta
-
-Envie
-
-Salve o game-id
+1. Acesse [http://localhost](http://localhost) em seu navegador.
+2. Na página 'Maker', crie um novo jogo inserindo uma frase secreta e anote o Game ID gerado.
+3. Na página 'Breaker', insira o Game ID e tente adivinhar a frase secreta.
 
 
-### 2. Adivinhar a senha
+## Manutenção e Atualização
 
-Acesse a url do frontend http://localhost:3000
+1. Modifique os arquivos **docker-compose.yml**, **Dockerfile** no backend ou frontend conforme necessário.
 
-Vá para o endponint breaker
+2. Recrie o ambiente com:
 
-entre com o game_id que foi gerado pelo Creator
+```shell
+docker compose -f docker-compose.yml down --rmi all
+docker compose -f docker-compose.yml up -d --build
+```
 
-Tente adivinhar
+## Escalabilidade
 
-## Estrutura do Código
+Aumente o número de instâncias de backend de duas formas:
 
-### Rotas:
+1. Adicionando novos serviços no **docker-compose.yml** e atualizando o **nginx.conf**.
+2. Usando o comando de escala do Docker Compose:
 
-- **`/create`**: Cria um novo jogo. Armazena a senha codificada em base64 e retorna um `game_id`.
-- **`/guess/<game_id>`**: Permite ao usuário adivinhar a senha. Compara a adivinhação com a senha armazenada e retorna o resultado.
+```shell
+docker compose scale backendapp1=3 backendapp2=2
+```
 
-### Classes Importantes:
+## Remoção do Ambiente
 
-- **`Guess`**: Classe responsável por gerenciar a lógica de comparação entre a senha e a tentativa do jogador.
-- **`WrongAttempt`**: Exceção personalizada que é levantada quando a tentativa está incorreta.
+Para remover completamente o ambiente:
 
+```shell
+docker compose -f docker-compose.yml down --rmi all --volumes
+cd ..
+rm pucpratica1docker -r -force
+```  
 
+## Considerações de Segurança
 
-## Melhorias Futuras
+1. As redes estão segregadas para limitar o acesso direto ao banco de dados.
+2. Considere implementar HTTPS para produção.
+3. Revise regularmente as imagens Docker e dependências para atualizações de segurança.
 
-- Implementar autenticação de usuário para salvar e carregar jogos.
-- Adicionar limite de tentativas.
-- Melhorar a interface de feedback para as tentativas de adivinhação.
+## Contribuição
+
+Contribuições são bem-vindas! Por favor, abra uma issue ou pull request para sugestões ou melhorias.
 
 ## Licença
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
-
+Este projeto está licenciado sob a MIT License.

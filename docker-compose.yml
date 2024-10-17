@@ -12,8 +12,8 @@ services:
       - app_net
     restart: unless-stopped
     depends_on:
-      - backend1
-      - backend2
+      - backendapp1
+      - backendapp2
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80"]
       interval: 30s
@@ -21,11 +21,10 @@ services:
       retries: 3
       start_period: 15s
 
-  backend1:
+  backendapp1:
     build:
       context: ./backend-app
       dockerfile: Dockerfile
-    container_name: backendapp1
     expose:
       - 5000
     networks:
@@ -44,11 +43,10 @@ services:
       retries: 3
       start_period: 15s
 
-  backend2:
+  backendapp2:
     build:
       context: ./backend-app
       dockerfile: Dockerfile
-    container_name: backendapp2
     expose:
       - 5000
     networks:
@@ -76,7 +74,7 @@ services:
     networks:
       - db_net
     environment:
-      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      POSTGRES_PASSWORD: secretpass
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -85,8 +83,6 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
-    secrets:
-      - db_password
 
 networks:
   app_net:
@@ -98,7 +94,3 @@ networks:
 volumes:
   postgres-data:
     driver: local
-
-secrets:
-  db_password:
-    file: ./secrets/db_password.txt
