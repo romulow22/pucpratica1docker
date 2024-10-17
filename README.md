@@ -24,7 +24,7 @@
   - [Considerações de Segurança](#considerações-de-segurança)
   - [Contribuição](#contribuição)
   - [Licença](#licença)
-    
+
 ## Descrição
 
 Este projeto implementa uma versão conteinerizada do jogo de adivinhação disponível no [Guess Game](https://github.com/fams/guess_game), utilizando Docker e Docker Compose. A solução demonstra boas práticas de conteinerização, orquestração e arquitetura de microserviços.
